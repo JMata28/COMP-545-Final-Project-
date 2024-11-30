@@ -1,31 +1,6 @@
 #This is our submission for COMP 545-001 Analysis of Algorithms - Final Project 
 #Group members: Arnold Mpiima, Lalitha Bhavanand, and Jose Mata
 
-#Menu:
-#1. look for person
-#2. add person
-#3. display names and numbers in phonebook
-#3. (if time allows, delete person)
-
-#Steps: 
-#Create dummy data in tuple format to save to phonebook. 
-#Save dummy data in phonebook. For each tuple saved in phone book: 
-    #Create the entry for the name in the trie data structure. 
-    #Save the tuple in the hash map. 
-#Display names and numbers in phonebook
-#Add menu options for the user.
-    #To look for a person: 
-        #perform the trie_lookup function to see if the name of the person is in the trie data structure. If it is, then proceed with the hash map lookup
-        #then the hashmap_lookup function takes place and returns the tuple information
-        #the point here is that the hashmap_lookup will not happen if the name is not found in the trie data structure. The fact that there is a 
-        #entry for the name in the trie data structure means that it will for sure be in the hashmap and therefore the hashfunction will not happen unnecesarily. 
-    #To add a person:
-        #ask the user for the first and last names and number of the person
-        #create the entry in the trie data structure by using the trie_add function
-        #create the entry in the hashmap data structure by using the hashmap_add function
-    #To display names and numbers in the phonebook:
-        #print out the hashmap list. If necessary, add code to make sure that only the non-empty items of the list print out. 
-
 #The code for the class "TrieNode" was obtained from https://www.geeksforgeeks.org/trie-insert-and-search/ and modified to fit the needs of this program
 #This class is used to represent nodes in the trie data structure and their functionality
 class TrieNode:
@@ -73,13 +48,19 @@ def trie_add(root, name):
             curr.child[index] = new_node
         # Move the curr pointer to the newly created node or the node that already existed for that character
         curr = curr.child[index]
-    # Mark the end of the word
+    #Mark the end of the word
     curr.word_end = True
 
 #This is the function that adds an entry to the hashmap data structure
 def hashmap_add(name, number):
     index = hash_function(name)
-    hashmap[index] = (name, number)
+    if hashmap[index] == None:
+        hashmap[index] = (name, number)
+    else:
+        new_item = (name, number)
+        collision_list = [hashmap[index]]
+        collision_list.append(new_item)
+        hashmap[index] = collision_list
 
 #Part of the code for function "trie_lookup" was obtained from https://www.geeksforgeeks.org/trie-insert-and-search/ and modified to fit the needs of this program 
 #This is the implementation of the Trie data structure to check if a name is already included in the phonebook. 
@@ -105,42 +86,58 @@ def trie_lookup(root, name):
     return curr.word_end
 
 #This is the manual implementation of a hash map to retrieve the saved names and numbers. 
+#In case of a collision in the hashmap, there will be a collision list in the index of the hashmap containing all the names and numbers with
+#the same index. This function retrieves the information of the appropriate name within the collision list. 
 def hashmap_lookup(name):
     index = hash_function(name)
-    name_and_number = hashmap[index]
+    if type(hashmap[index]) is list:
+        for pair in hashmap[index]:
+            if pair[0] == name:
+                name_and_number = pair
+    else:
+        name_and_number = hashmap[index]
     return name_and_number
 
 #This is the function that looks for a person in the phonebook directory.
 #First, it uses the trie data structure to see if the name exists in the phonebook directory. If it does, then it retrieves it in the hashmap along with the phone number.
+#If the name does not exist in the trie data structure, then it also does not exist in the hashmap data structure, so it is NOT found in the phonebook directory. 
 def option_1():
     user_answer_1 = input("Enter the name of the person that you're looking for in the phonebook directory. Type their first name, then a space, and then their last name.\n")
     found_status = trie_lookup(root, user_answer_1)
     if found_status == True:
-        print("Name " + user_answer_1 + " was found in the phonebook directory.")
+        print("The name '" + user_answer_1 + "' was found in the phonebook directory.")
         name_and_number = hashmap_lookup(user_answer_1)
         print("Name: " + name_and_number[0] + "\nNumber: " + name_and_number [1] + "\n\n")
     else:
         print("Name " + user_answer_1 + " was NOT found in the phonebook directory.\n\n")
 
+#This is the function that enables the user to add a new name and phone number to the phonebook directory. 
+#First, the name is added to the trie data structure and after that, it is added to the hashmap data structure
 def option_2(root):
     user_name = input("Please enter the person's first name, then a space, and then their last name.\n")
     user_number = input("Please enter the person's phone number in the following format: xxx-xxx-xxxx\n")
     trie_add(root, user_name)
     hashmap_add(user_name, user_number)
-    print("User '" + user_name +"' has been succesfully added to the phonebook directory.\n\n")
+    print("The entry for '" + user_name +"' has been succesfully added to the phonebook directory.\n\n")
 
+#This is the function that prints out all the names and phone numbers in the phonebook directory. 
+#Only the entries that are not None in the hashmap will be printed out
 def option_3(hashmap):
     print("Here is a list of all the names and numbers in the phonebook directory:")
     for pair in hashmap:
         if pair != None:
             print(pair)
     print("\n\n")
+
+#dummy data to add to the phonebook directory
 dummy_data = [('Arnold Mpiima', '123-456-7890'), ('Lalitha Bhavanand', '123-123-1231'), ('Jose Mata', '504-123-4567')]
 
+#dummy data is added to both trie and hashmap data structures
 for name, number in dummy_data:
     trie_add(root, name)
     hashmap_add(name, number)
 
+#main menu of the program
 print("Welcome to our group's phone directory simulator using hashmap and trie data structures.")
 while True: 
     user_answer_0 = input("Please choose one of the four options below:\nEnter '1' to look for a person in the phonebook directory.\nEnter '2' to add a new person to the phonebook directory.\nEnter '3' to display all the names and numbers in the phonebook.\nEnter '4' to end the program.\n")
