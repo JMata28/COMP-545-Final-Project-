@@ -1,5 +1,5 @@
 #This is our submission for COMP 545-001 Analysis of Algorithms - Final Project 
-#Group members: Arnold Mpiima, Lalitha Bhavanand, and Jose Mata
+#Group members: Jose Mata, Arnold Mpiima, Lalitha Bhavanand
 
 #The code for the class "TrieNode" was obtained from https://www.geeksforgeeks.org/trie-insert-and-search/ and modified to fit the needs of this program
 #This class is used to represent nodes in the trie data structure and their functionality

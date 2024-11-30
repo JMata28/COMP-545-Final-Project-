@@ -1,6 +1,6 @@
 # COMP-545-Final-Project
 This is our submission for COMP 545-001 Analysis of Algorithms - Final Project 
-Group members: Arnold Mpiima, Lalitha Bhavanand, and Jose Mata
+Group members: Jose Mata, Arnold Mpiima, and Lalitha Bhavanand
 
 Fall 2024, Bridgewater State University
 
