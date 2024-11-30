@@ -44,7 +44,7 @@ This option allows you to add a name a the corresponding number to the phonebook
 ### Option 3 - Display all the names and numbers in the phonebook directory:
 Selecting this option displays all the names and their corresponsing numbers in the phonebook directory. In cases were collisions were found, the colliding entries will appear as part of the same list. If entries in addition to the dummy data entries have been made by the user with Option 2, these entries will appear in the list displayed by Option 3. 
 
-### Option 4 - Terminate the Program
+### Option 4 - Terminate the program:
 The program terminates. 
 
 
