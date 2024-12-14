@@ -85,6 +85,35 @@ def trie_lookup(root, name):
     # Return true if the word exists and is marked as ending
     return curr.word_end
 
+def collect_suggestions(current_node, word, suggestions):
+    if current_node.word_end:
+        suggestions.append(word)
+    for pos, child_node in enumerate(current_node.child):
+        if child_node is not None:
+            char = ' ' if pos == 26 else chr(pos +ord('a'))
+            collect_suggestions(child_node, word+char, suggestions)
+        # else:
+        #     print('name not found ')
+
+
+def print_suggestions(prefix):
+    current_node = root
+    prefix = prefix.lower()
+    for char in prefix:
+        index = 26 if char == ' ' else ord(char)- ord('a')
+        if current_node.child[index] is None:
+            print("No suggestions found for prefix, {prefix}")
+            return
+        current_node = current_node.child[index]
+    suggestions = []
+    collect_suggestions(current_node, prefix, suggestions)
+
+    if suggestions:
+        print(f"Suggestions for prefix {prefix\n}: {', '.join(suggestions)}")
+    else:
+        print(f"No suggestions found for prefix {prefix}")
+
+
 #This is the manual implementation of a hash map to retrieve the saved names and numbers. 
 #In case of a collision in the hashmap, there will be a collision list in the index of the hashmap containing all the names and numbers with
 #the same index. This function retrieves the information of the appropriate name within the collision list. 
@@ -102,7 +131,9 @@ def hashmap_lookup(name):
 #First, it uses the trie data structure to see if the name exists in the phonebook directory. If it does, then it retrieves it in the hashmap along with the phone number.
 #If the name does not exist in the trie data structure, then it also does not exist in the hashmap data structure, so it is NOT found in the phonebook directory. 
 def option_1():
-    user_answer_1 = input("Enter the name of the person that you're looking for in the phonebook directory. Type their first name, then a space, and then their last name.\n")
+    user_answer_1 = input("Enter the name of the person that you're looking for in the phonebook directory. Type their first name, then a space, and then their last name.\n").strip()
+    user_answer_1= user_answer_1.lower()
+    print_suggestions(user_answer_1)
     found_status = trie_lookup(root, user_answer_1)
     if found_status == True:
         print("The name '" + user_answer_1 + "' was found in the phonebook directory.")
@@ -129,26 +160,34 @@ def option_3(hashmap):
             print(pair)
     print("\n\n")
 
-#dummy data to add to the phonebook directory
-dummy_data = [('Arnold Mpiima', '123-456-7890'), ('Lalitha Bhavanand', '123-123-1231'), ('Jose Mata', '504-123-4567')]
+def enter_dummy_data():
+    #dummy data to add to the phonebook directory
+    dummy_data = [('Arnold Mpiima', '123-456-7890'), ('Lalitha Bhavanand', '123-123-1231'), ('Jose Mata', '504-123-4567')]
 
-#dummy data is added to both trie and hashmap data structures
-for name, number in dummy_data:
-    trie_add(root, name)
-    hashmap_add(name, number)
+    #dummy data is added to both trie and hashmap data structures
+    for name, number in dummy_data:
+        trie_add(root, name)
+        hashmap_add(name, number)
 
-#main menu of the program
-print("Welcome to our group's phone directory simulator using hashmap and trie data structures.")
-while True: 
-    user_answer_0 = input("Please choose one of the four options below:\nEnter '1' to look for a person in the phonebook directory.\nEnter '2' to add a new person to the phonebook directory.\nEnter '3' to display all the names and numbers in the phonebook.\nEnter '4' to end the program.\n")
-    if user_answer_0 == '1':
-        option_1()
-    elif user_answer_0 == '2':
-        option_2(root)
-    elif user_answer_0 == '3':
-        option_3(hashmap)
-    elif user_answer_0 == '4':
-        print("Exiting program...")
-        break
-    else:
-        print("Answer is invalid")
+def print_menu():
+    #main menu of the program
+    print("Welcome to our group's phone directory simulator using hashmap and trie data structures.")
+    while True:
+        user_answer_0 = input("Please choose one of the four options below:\nEnter '1' to look for a person in the phonebook directory.\nEnter '2' to add a new person to the phonebook directory.\nEnter '3' to display all the names and numbers in the phonebook.\nEnter '4' to end the program.\n")
+        if user_answer_0 == '1':
+            option_1()
+        elif user_answer_0 == '2':
+            option_2(root)
+        elif user_answer_0 == '3':
+            option_3(hashmap)
+        elif user_answer_0 == '4':
+            print("Exiting program...")
+            break
+        else:
+            print("Answer is invalid")
+
+def run_program():
+    enter_dummy_data()
+    print_menu()
+
+run_program()
