@@ -10,7 +10,7 @@ class TrieNode:
 
 root = TrieNode() #the root node for the trie data structure is one that always starts completely empty (no characters in its children and the wordEnd attribute is False)
 
-hashmap = [None]*100 #The hashmap consists of a list of 100 items (indexes 0 to 99) that is initialized with all-zero values 
+hashmap = [None]*100 #The hashmap consists of a list of 100 items (indexes 0 to 99) that is initialized with all-None values 
 
 #This is a hash function that simply calculates the sum of the equivalent ascii value of each character, then divides it by a hundred, and returns the remainder as the hash code (index)
 def hash_function(name):
@@ -53,6 +53,10 @@ def trie_add(root, name):
 
 #This is the function that adds an entry to the hashmap data structure
 def hashmap_add(name, number):
+    #Convert the name to only lowercase letters
+    name = name.lower()
+    #Remove leading and trailing whitespace characters
+    name = name.strip()
     index = hash_function(name)
     if hashmap[index] == None:
         hashmap[index] = (name, number)
@@ -89,6 +93,10 @@ def trie_lookup(root, name):
 #In case of a collision in the hashmap, there will be a collision list in the index of the hashmap containing all the names and numbers with
 #the same index. This function retrieves the information of the appropriate name within the collision list. 
 def hashmap_lookup(name):
+    #Covert the name to use only lowercase letters
+    name = name.lower()
+    #Remove leading and trailing whitespace characters
+    name = name.strip()
     index = hash_function(name)
     if type(hashmap[index]) is list:
         for pair in hashmap[index]:
