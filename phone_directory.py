@@ -113,7 +113,7 @@ def print_suggestions(prefix):
     collect_suggestions(current_node, prefix, suggestions)
 
     if suggestions:
-        print(f"Suggestions for prefix {prefix}\n: {', '.join(suggestions)}")
+        print(f"Suggestions for prefix {prefix}: {', '.join(suggestions)}")
     else:
         print(f"No suggestions found for prefix {prefix}")
 
